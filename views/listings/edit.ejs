@@ -1,0 +1,50 @@
+<% layout("/layouts/boilerplate") -%>
+
+<body>
+    <h2>Edit the list</h2>
+    <div class="row mt-3">
+        <div class="col-8 offset-2">
+    <form method="POST" action="/listings/<%= inddata._id %>?_method=PUT"  novalidate class="needs-validation" enctype="multipart/form-data">
+        <div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+      
+    <input type="text" name="listing[title]" value="<%= inddata.title %> " class="form-control" >
+    </div>
+   <br><br>
+   <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+  
+   <textarea name="listing[description]" class="form-control" ><%= inddata.description %></textarea>
+   </div><br><br>
+   <div class="mb-3">
+     <label for="location" class="form-label">Location</label>
+   
+   <input type="text" name="listing[location]" value="<%= inddata.location %>" class="form-control">
+   </div><br><br>
+   <div class="mb-3">
+    <label for="image" class="form-label"> Uplaod new Image</label>
+
+   <input type="file" name="listing[url]"  class="form-control">
+   </div><br><br>
+<div class="row">
+   <div class="mb-3 col-md-4">
+ <label for="price" class="form-label">Price</label>
+      
+   <input type="text" name="listing[price]" value="<%= inddata.price %>" class="form-control">
+   </div><br><br>
+   <div class="mb-3 col-md-8">
+      <label for="country" class="form-label">Country</label>
+  
+      <input type="text" name="listing[country]" value="<%= inddata.country %>" class="form-control">
+      </div>
+</div>  <br><br>
+      <button class="btn btn-dark edit-btn mt-3">add</button>
+      <br><br>
+
+
+</form>
+</div>
+</div>
+
+    
+</body>
