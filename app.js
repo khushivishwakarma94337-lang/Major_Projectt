@@ -104,6 +104,10 @@ async function main() {
 main().then((res)=>{console.log("Connection ")})
 .catch((err)=>{console.log(err)});
 
+app.get("/",(req,res)=>{
+  res.redirect("/listings");
+})
+
 app.all(/.*/,(req,res,next)=>{
    next(new ExpressError(404,"Page not found"));
 });
@@ -116,6 +120,4 @@ app.use((err,req,res,next)=>{
     
     // res.status(status).send(message);
 })
-app.get("/test",(req,res)=>{
-  res.send("done");
-})
+
