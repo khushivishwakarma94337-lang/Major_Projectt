@@ -36,9 +36,6 @@ router.post("/:id/cart",isLoggedIn,ListingController.cartPost);
 
 router.get("/new", isLoggedIn,(ListingController.newRoute));
 router.delete("/mycart/:id",isLoggedIn,wrapAsync(ListingController.removeCart));
-router.get("/",(req,res)=>{
-    res.redirect("/listings");
-});
 
 router.route("/")
  .get(wrapAsync(ListingController.index)
