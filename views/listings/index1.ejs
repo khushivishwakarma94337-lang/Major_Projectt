@@ -1,126 +1,259 @@
 <% layout("/layouts/boilerplate") -%>
+
 <script>
-  const listing=<%- JSON.stringify(inddata)%>;
-  const mapToken="<%= mapToken %>";
+  const listing = <%- JSON.stringify(inddata) %>;
+  const mapToken = "<%= mapToken %>";
 </script>
-<div class="row mt-2 offset-3">
-    <div class="col-8 ">
-    <h2>        <b><%= inddata.title %> </b> <br>
-</h2>
-<div class="card show-card offset-3 listing-card">
-  <div class="card listing-card" style="width: 18rem;">
-  <img src="<%= inddata.image.url %>" class="card-img-top show-img" alt="Listing_image">
-  <div class="card-body">
-    <p class="card-text"> 
-       <i> <%=  inddata.owner ? inddata.owner.username:" no owner" %> </i><br></p>
-    <p class="card-text"> 
-    <%= inddata.description %><br></p>
-      <p class="card-text"> 
-    &#8377;<%= inddata.price.toLocaleString("en-IN") %><br></p>
-       <p class="card-text"> 
-    <%= inddata.location %><br></p>
-          <p class="card-text"> 
 
-    <%= inddata.country %><br></p>
+<div class="container mt-4">
 
-    </p>
-  </div>
-</div>      
-    </div>
-    <% if(currUser && inddata && currUser._id.equals(inddata.owner._id)) { %>
-<div class="btns mb-3">
-  <a href="/listings/<%= inddata._id%>/edit " class="btn edit-btn ">Edit</a><br><br>
+  <div class="row justify-content-center">
 
- <form method="POST" action="/listings/<%= inddata._id %>/delete?_method=DELETE">
- <button class="btn btn-dark ">Delete</button>
- </form>
-</div>
-<% } %>
+    <!-- LISTING SECTION -->
 
-<hr>
+    <div class="col-lg-8 col-md-10 col-12">
 
-<% if(currUser) { %>
-<div class="col-8 offset-1 mb-3">
-  <h4>  Leave a Review</h4>
-  <form action="/listings/<%= inddata._id %>/reviews" method="POST" novalidate class="needs-validation">
+      <h2 class="fw-bold mb-4 text-center">
+        <%= inddata.title %>
+      </h2>
 
-<!-- <div class="mb-3 mt-3">
-  <label class="form-Label">Rating</label>
+      <div class="card listing-card shadow border-0 rounded-4 overflow-hidden">
 
-<input type="range" min="1" max="5" id="rating" name="review[rating]" >
-</div> -->
-<div class="mb-3 mt-3">
-  <label class="form-Label">Rating</label>
+        <img 
+          src="<%= inddata.image.url %>" 
+          class="card-img-top show-img"
+          alt="Listing_image"
+        >
 
-<fieldset class="starability-slot">
+        <div class="card-body p-4">
 
-  <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="1" checked aria-label="No rating." />
-  <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-  <label for="first-rate1" title="Terrible">1 star</label>
-  <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-  <label for="first-rate2" title="Not good">2 stars</label>
-  <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-  <label for="first-rate3" title="Average">3 stars</label>
-  <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-  <label for="first-rate4" title="Very good">4 stars</label>
-  <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-  <label for="first-rate5" title="Amazing">5 stars</label>
+          <p class="card-text">
+            <i>
+              <%= inddata.owner ? inddata.owner.username : "No Owner" %>
+            </i>
+          </p>
+
+          <p class="card-text">
+            <%= inddata.description %>
+          </p>
+
+          <p class="card-text fw-bold">
+            ₹ <%= inddata.price.toLocaleString("en-IN") %>
+          </p>
+
+          <p class="card-text">
+            Country : <%= inddata.country %>
+          </p>
+
+          <form action="/listings/<%= inddata._id %>/cart" method="POST">
+
+            <button class="btn btn-danger rounded-pill w-100">
+              Add to Cart
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+      <!-- EDIT DELETE BUTTONS -->
+
+      <% if(currUser && inddata && inddata.owner?._id && String(currUser._id)===String(inddata.owner._id)) { %>
+
+      <div class="d-flex gap-2 flex-wrap mb-4 mt-3">
+
+        <a 
+          href="/listings/<%= inddata._id%>/edit"
+          class="btn btn-dark rounded-pill"
+        >
+          Edit
+        </a>
+
+        <form 
+          method="POST"
+          action="/listings/<%= inddata._id %>/delete?_method=DELETE"
+        >
+
+          <button class="btn btn-danger rounded-pill">
+            Delete
+          </button>
+
+        </form>
+
+      </div>
+
+      <% } %>
+
+      <hr>
+
+      <!-- REVIEW FORM -->
+
+      <% if(currUser) { %>
+
+      <div class="mb-4">
+
+        <h4 class="mb-3">Leave a Review</h4>
+
+        <form 
+          action="/listings/<%= inddata._id %>/reviews"
+          method="POST"
+          novalidate
+          class="needs-validation"
+        >
+
+          <div class="mb-3">
+
+            <label class="form-label">
+              Rating
+            </label>
+
+            <fieldset class="starability-slot">
+
+  <input type="radio"
+         id="first-rate1"
+         name="review[rating]"
+         value="1"
+         checked />
+  <label for="first-rate1" title="Terrible">
+      1 star
+  </label>
+
+  <input type="radio"
+         id="first-rate2"
+         name="review[rating]"
+         value="2" />
+  <label for="first-rate2" title="Not good">
+      2 stars
+  </label>
+
+  <input type="radio"
+         id="first-rate3"
+         name="review[rating]"
+         value="3" />
+  <label for="first-rate3" title="Average">
+      3 stars
+  </label>
+
+  <input type="radio"
+         id="first-rate4"
+         name="review[rating]"
+         value="4" />
+  <label for="first-rate4" title="Very good">
+      4 stars
+  </label>
+
+  <input type="radio"
+         id="first-rate5"
+         name="review[rating]"
+         value="5" />
+  <label for="first-rate5" title="Amazing">
+      5 stars
+  </label>
+
 </fieldset>
-</div>
 
+          </div>
 
-<div class="mb-3 mt-3">
-  <label class="form-Label">comments</label>
- <textarea name="review[comment]" id="comment" col="20" rows="5" class="form-control" required></textarea>
-<div class="invalid-feedback">Please write comment to add review</div>
-</div>
-<button class="btn btn-outline-dark">Submit</button>
-</form>
-<% } %>
+          <div class="mb-3">
 
+            <label class="form-label">
+              Comments
+            </label>
 
-<% if(inddata.reviews.length>0) {%>
+            <textarea
+              name="review[comment]"
+              id="comment"
+              rows="5"
+              class="form-control"
+              required
+            ></textarea>
 
-<div class="row">
-  <p><b> All reviews</b></p>
+            <div class="invalid-feedback">
+              Please write comment to add review
+            </div>
 
-<p><% for(list of inddata.reviews){ %>
-  <div class="card col-5 mb-3 ms-3">
-    <div class="card-body">
-      <div class="card-title"><%= inddata.owner ? inddata.owner.username:" no owner" %></div>
-      <p class="card-text"> <%=list.comment %></p>
-      <p class="starability-result card-text" data-rating="<%= list.rating %>"></p>
+          </div>
 
-    <form class="mb-3 ms-1" method="POST" action="/listings/<%= inddata._id %>/reviews/<%=list._id %>?_method=DELETE">
-    <button class="btn btn-dark btn-sm" >Delete</button>
-   </form>
+          <button class="btn btn-outline-dark rounded-pill">
+            Submit
+          </button>
+
+        </form>
+
+      </div>
+
+      <% } %>
+
+      <!-- REVIEWS -->
+
+      <% if(inddata.reviews.length > 0) { %>
+
+      <div class="row mt-4">
+
+        <h4 class="mb-4">All Reviews</h4>
+
+        <% for(list of inddata.reviews){ %>
+
+        <div class="col-lg-6 col-md-6 col-12 mb-4">
+
+          <div class="card h-100 shadow-sm border-0 rounded-4">
+
+            <div class="card-body">
+
+              <div class="card-title fw-bold mb-2">
+                <%= inddata.owner ? inddata.owner.username : "No Owner" %>
+              </div>
+
+              <p class="card-text">
+                <%= list.comment %>
+              </p>
+
+              <p 
+                class="starability-result card-text"
+                data-rating="<%= list.rating %>"
+              ></p>
+
+              <form 
+                class="mt-3"
+                method="POST"
+                action="/listings/<%= inddata._id %>/reviews/<%=list._id %>?_method=DELETE"
+              >
+
+                <button class="btn btn-dark btn-sm rounded-pill">
+                  Delete
+                </button>
+
+              </form>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <% } %>
+
+      </div>
+
+      <% } %>
 
     </div>
+
+    <!-- MAP SECTION -->
+
+    <div class="col-lg-10 col-md-11 col-12 mt-5 mb-5">
+
+      <h3 class="mb-3 text-center">
+        Where you will be
+      </h3>
+
+      <div id="map"></div>
+
+    </div>
+
   </div>
- 
-<% } %></p>
-<hr>
-</div>
-<% } %>
-
-</div>  
-<div class="col-6 offset-3 mb-3 ms-0">
-  <h3>Where you will be </h3>
-  
-  <div id="map"  ></div>
-
-  
 
 </div>
 
-
-</div>
 <script src="/js/map.js"></script>
-  
-
-
-  
-  
-
-
-

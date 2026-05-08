@@ -1,85 +1,199 @@
 <% layout("/layouts/boilerplate") -%>
 
-    <%= success %>
-    <style>
-        #filters{
-            display:flex;
-            flex-wrap:wrap;
-            align-items: center;
+    <!-- <style>
+#filters{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:1rem;
+}
 
-        }
-        .filter{
-            text-align: center;
-            margin-right: 2rem;
-            margin-top: 3rem;
-            opacity: 0.7;
-        }
-        .filter:hover{
-            opacity: 1;
-            cursor: pointer;
-        }
-        .filter p{
-            font-size: 0.8rem;
-        }
-        .tax-info{
-            display: none;
+.filter{
+    text-align:center;
+    margin-top:1.5rem;
+    opacity:0.7;
+}
 
-        }
-        .tax-toggle{
-            border: 1px solid black;
-            border-radius: 1rem;
-            height: 3.5rem;
-            padding:1rem;
-            margin-left:3rem;
-            display: flex;
-            align-items: center;
- }
+.filter:hover{
+    opacity:1;
+    cursor:pointer;
+}
 
-    </style>
+.filter p{
+    font-size:0.9rem;
+    margin:0;
+}
+
+.tax-toggle{
+    border:1px solid black;
+    border-radius:1rem;
+    height:3.5rem;
+    padding:0 1rem;
+    display:flex;
+    align-items:center;
+    margin-top:1.5rem;
+
+    /* important */
+    margin-left:auto;
+    white-space:nowrap;
+}
+a{
+    text-decoration: none;
+    color:black; 
+
+}
+</style> -->
+<style>
+#filters{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:1rem;
+}
+
+.filter{
+    text-align:center;
+    margin-top:1.5rem;
+    opacity:0.7;
+}
+
+.filter:hover{
+    opacity:1;
+    cursor:pointer;
+}
+
+.filter p{
+    font-size:0.9rem;
+    margin:0;
+}
+
+.tax-toggle{
+    border:1px solid black;
+    border-radius:1rem;
+    height:3.5rem;
+    padding:0 1rem;
+    display:flex;
+    align-items:center;
+    margin-top:1.5rem;
+    margin-left:auto;
+    white-space:nowrap;
+}
+
+a{
+    text-decoration:none;
+    color:black;
+}
+
+/* Filter dropdown button hidden on desktop */
+.filter-dropdown{
+    display:none;
+}
+
+/* ================= MOBILE VIEW ================= */
+@media(max-width:768px){
+
+    /* Hide filters by default */
+    #filters{
+        display:none;
+        flex-direction:column;
+        align-items:flex-start;
+        gap:1rem;
+        background:white;
+        padding:1rem;
+        border-radius:1rem;
+        box-shadow:0 4px 10px rgba(0,0,0,0.1);
+        margin-top:1rem;
+    }
+
+    /* Show when active */
+    #filters.show{
+        display:flex;
+    }
+
+    /* Dropdown button show */
+    .filter-dropdown{
+        display:block;
+        width:100%;
+        margin-top:1rem;
+    }
+
+    .tax-toggle{
+        width:100%;
+        margin-left:0;
+    }
+}
+</style>
+
+
+<!-- Mobile Dropdown Button -->
+<div class="dropdown filter-dropdown">
+  <button class="btn btn-danger dropdown-toggle w-100" type="button"
+          onclick="toggleFilters()">
+    Filters
+  </button>
+</div>
+
+
+<script>
+function toggleFilters(){
+   document.getElementById("filters").classList.toggle("show");
+}
+</script>
  <div id="filters">
       <div class="filter">
-     <div>   <i class="fa-solid fa-fire"></i></div>
+     <div> <a href="/listings?category=trend">  <i class="fa-solid fa-fire"></i></div>
      <p>  Trending </p>
+     </a>
      </div>
       <div class="filter">
-       <div>  <i class="fa-solid fa-bed"></i></div>
+       <div><a href="/listings?category=rooms">   <i class="fa-solid fa-bed"></i></div>
        <p>  Rooms </p>
+       </a>
     </div>
     <div class="filter">
-     <div> <i class="fa-solid fa-mountain-city"></i></div>
+     <div> <a href="/listings?category=iconicCity"> <i class="fa-solid fa-mountain-city"></i></div>
      <p>  Iconic Cities </p>
+     </a>
      </div>
       <div class="filter">
-       <div><i class="fa-solid fa-mountain"></i></div>
+       <div><a href="/listings?category=mountain"> <i class="fa-solid fa-mountain"></i></div>
        <p> Mountains </p>
+       </a>
     </div>
     <div class="filter">
-     <div> <i class="fa-brands fa-fort-awesome"></i></div>
+     <div><a href="/listings?category=castle">  <i class="fa-brands fa-fort-awesome"></i></div>
      <p>  castle</p>
+     </a>
      </div>
       <div class="filter">
-       <div> <i class="fa-solid fa-person-swimming"></i></div>
+       <div><a href="/listings?category=amazingPools">  <i class="fa-solid fa-person-swimming"></i></div>
        <p>  Amazing Pools</p>
+       </a>
     </div>
     <div class="filter">
-       <div><i class="fa-solid fa-campground"></i></div>
+       <div><a href="/listings?category=camping"><i class="fa-solid fa-campground"></i></div>
        <p> Camping </p>
+    </a>
     </div>
     <div class="filter">
-     <div><i class="fa-solid fa-cow"></i></div>
+     <div><a href="/listings?category=farms"> <i class="fa-solid fa-cow"></i></div>
      <p>Farms</p>
+     </a>
      </div>
       <div class="filter">
-       <div> <i class="fa-regular fa-snowflake"></i></div>
+       <div><a href="/listings?category=arctic"> <i class="fa-regular fa-snowflake"></i></div>
        <p>  Arctic</p>
+      </a>
     </div>
      <div class="filter">
-     <div><i class="fa-solid fa-igloo"></i></div>
+     <div><a href="/listings?category=domes"><i class="fa-solid fa-igloo"></i></div>
      <p>Domes</p>
+     </a>
      </div>
       <div class="filter">
-       <div><i class="fa-solid fa-sailboat"></i></div>
+       <div><a href="/listings?category=boats"><i class="fa-solid fa-sailboat"></i></div>
        <p> Boats</p>
+       </a>
     </div>
     <div class="tax-toggle">
         <div class="form-check-reverse form-switch">
@@ -102,8 +216,7 @@
     <p class="card-text">
         <p>
     <b>   <%= list.title %> <br></b>
-        &#8377;<%= list.price.toLocaleString("en-IN") %> /night    
-        <i class="tax-info">  &nbsp; &nbsp;+18% GST</i> 
+&#8377;<%= list.price ? list.price.toLocaleString("en-IN") : "0" %> /night        <i class="tax-info">  &nbsp; &nbsp;+18% GST</i> 
         </p>
     </p>
   </div>

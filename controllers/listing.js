@@ -3,13 +3,84 @@ const ExpressError=require("../utils/ExpressError.js");
 const mbxgeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapToken=process.env.MAP_TOKEN;
 const geocodingClient = mbxgeocoding({ accessToken:mapToken});
+const Cart=require("../models/cart.js");
+const { default: mongoose } = require("mongoose");
 
+//cart
+
+
+
+
+
+module.exports.cartPost = async (req, res) => {
+    let listing = await Listing.findById(req.params.id);
+
+    let existingItem = await Cart.findOne({
+        userId: req.user._id,
+        listingId: listing._id
+    });
+
+    if (existingItem) {
+        req.flash("error", "Item already in cart");
+        return res.redirect("/listings/cart");
+    }
+
+    let item = new Cart({
+        userId: req.user._id,
+        listingId: listing._id,
+        title: listing.title,
+        image: listing.image.url,
+        price: listing.price
+    });
+
+    await item.save();
+
+
+
+
+
+    req.flash("success", "Added to cart");
+    res.redirect("/listings/mycart");
+};
+
+module.exports.cart=(async(req,res)=>{
+    let items=await Cart.find({
+        userId:req.user._id
+    })
+    console.log(items);
+res.render("listings/cart.ejs",{items})
+})
+module.exports.removeCart=(async(req,res)=>{
+    let {id}=req.params;
+    await Cart.findByIdAndDelete(id);
+    req.flash("success","Item Removed from Cart!");
+    res.redirect("/listings/mycart");
+
+})
+    
+ 
 
 module.exports.index=(async (req,res)=>{
- let allList =  await Listing.find();
+ let {category}=req.query;
+ let allList;
+ if(category){
+    allList=await Listing.find({category});
+ 
+ }else{
+    allList=await Listing.find({});
+ }
 //  console.log(allList);
 res.render("listings/index.ejs",{allList});
 });
+module.exports.searchDestination = async (req, res) => {
+    let { country } = req.query;
+
+    let allList = await Listing.find({ country });
+    console.log(allList);
+
+    res.render("listings/index.ejs", { allList });
+};
+
 
 module.exports.newRoute=(req,res)=>{
     res.render("listings/new.ejs")
@@ -30,7 +101,7 @@ let response = await  geocodingClient.forwardGeocode({
     
 
    
-    if (req.file) {
+     if (req.file) {
         newList.image = {
             url: req.file.path,
             filename: req.file.filename
@@ -42,11 +113,10 @@ let response = await  geocodingClient.forwardGeocode({
     let savedList= await newList.save();
     console.log(savedList);
 
-    req.flash("success", "New listing is created");
+    req.flash("success", "New listing is created!!");
 
     res.redirect("/listings");   
 };
-
 
 // module.exports.showRoute=(async (req,res)=>{
 //     let {id}=req.params;
@@ -61,8 +131,11 @@ let response = await  geocodingClient.forwardGeocode({
 //           res.render("listings/index.ejs",{inddata});
 // });
 
-module.exports.showRoute = async (req, res) => {
+module.exports.showRoute = async (req, res,next) => {
     let { id } = req.params;
+    if(!mongoose.Types.ObjectId.isValid(id)){
+        return next();
+    }
 
     let inddata = await Listing.findById(id)
         .populate({

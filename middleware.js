@@ -34,7 +34,7 @@ next();
 const isreviewAuthor=async(req,res,next)=>{
                 let {id,reviewId}=req.params;
               let review= await Review.findById(reviewId);
-              if(!Review.author.equals(res.locals.currUser._id)){
+              if(!review.author || !review.author.equals(res.locals.currUser._id)){
                 req.flash("error","you didn't create this review");
                                 return   res.redirect(`/listings/${id}`);
 

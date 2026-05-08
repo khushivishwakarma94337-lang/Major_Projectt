@@ -29,7 +29,16 @@ const validateList=(req,res,next)=>{
         next();
     }
 };
+router.get("/search" ,(ListingController.searchDestination));
+router.get("/mycart",isLoggedIn, ListingController.cart);
+router.post("/:id/cart",isLoggedIn,ListingController.cartPost);
+
+
 router.get("/new", isLoggedIn,(ListingController.newRoute));
+router.delete("/mycart/:id",isLoggedIn,wrapAsync(ListingController.removeCart));
+router.get("/",(req,res)=>{
+    res.redirect("/listings");
+});
 
 router.route("/")
  .get(wrapAsync(ListingController.index)
@@ -44,10 +53,8 @@ router.route("/")
 // .post(isLoggedIn,wrapAsync(ListingController.newListForm)
 // );
 
-
-router.route("/:id")
- .get(wrapAsync(ListingController.showRoute)
-)
+router.get("/:id",(wrapAsync(ListingController.showRoute)
+));
 // .put(isLoggedIn,isOwner,
 //         upload.single("listing[image]"),
 // wrapAsync(ListingController.edit));
