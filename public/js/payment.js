@@ -21,7 +21,7 @@ async function payNow(price) {
 
     const options = {
 
-        key: "process.env.RAZORPAY_KEY",
+        key:key_pay ,
 
         amount: order.amount,
 
