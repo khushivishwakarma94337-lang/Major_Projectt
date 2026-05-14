@@ -9,7 +9,7 @@ const { default: mongoose } = require("mongoose");
 //cart
 
 
-
+ 
 
 
 module.exports.cartPost = async (req, res) => {
@@ -182,7 +182,7 @@ module.exports.edit=(async(req,res)=>{
             let {id}=req.params;
             
             
- let listing=  await  Listing.findByIdAndUpdate(id,{...req.body.listing});
+  await  Listing.findByIdAndUpdate(id,{...req.body.listing});
  console.log("Listing",listing);
         if( typeof req.file !== "undefined"){
        let url=req.file.path;
@@ -198,5 +198,6 @@ module.exports.edit=(async(req,res)=>{
 module.exports.deleteList=(async (req,res)=>{
     let {id}=req.params;
      await Listing.findByIdAndDelete(id);
- res.redirect("/listings");
+     req.flash("success","Listing Deleted");
+     res.redirect("/listings");
 });

@@ -1,78 +1,134 @@
-const express=require("express");
-const router=express.Router();
-const wrapAsync=require("../utils/wrapAsync.js");
-const {ListingSchema}=require("../schema.js");
-const ExpressError=require("../utils/ExpressError.js");
-const Listing = require("../models/listing.js");
-const {isLoggedIn, isOwner}=require("../middleware.js");
-const ListingController=require("../controllers/listing.js");
-const multer  = require('multer');
-const{storage}=require("../cloudConflict.js");
-const upload = multer({storage});
+const express = require("express");
+
+const router = express.Router();
+
+const wrapAsync = require("../utils/wrapAsync.js");
+
+const { ListingSchema } = require("../schema.js");
+
+const ExpressError = require("../utils/ExpressError.js");
+
+const { isLoggedIn, isOwner } = require("../middleware.js");
+
+const ListingController = require("../controllers/listing.js");
+
+const multer = require("multer");
+
+const { storage } = require("../cloudConflict.js");
+
+const upload = multer({ storage });
 
 
 
+// VALIDATION
+const validateList = (req, res, next) => {
 
+    let { error } = ListingSchema.validate(req.body);
 
+    if (error) {
 
+        let errMsg = error.details
+            .map((el) => el.message)
+            .join(",");
 
+        throw new ExpressError(400, errMsg);
 
+    } else {
 
-const validateList=(req,res,next)=>{
-     
-    let {error}= ListingSchema.validate(req.body);
-    if(error){
-            let errMsg=error.details.map((el) =>el.message).join(",");
-
-        throw new ExpressError(400,errMsg);
-    }else{
         next();
+
     }
 };
-router.get("/search" ,(ListingController.searchDestination));
-router.get("/mycart",isLoggedIn, ListingController.cart);
-router.post("/:id/cart",isLoggedIn,ListingController.cartPost);
 
 
-router.get("/new", isLoggedIn,(ListingController.newRoute));
-router.delete("/mycart/:id",isLoggedIn,wrapAsync(ListingController.removeCart));
 
+// SEARCH
+router.get(
+    "/search",
+    ListingController.searchDestination
+);
+
+
+
+// CART
+router.get(
+    "/mycart",
+    isLoggedIn,
+    ListingController.cart
+);
+
+router.post(
+    "/:id/cart",
+    isLoggedIn,
+    ListingController.cartPost
+);
+
+router.delete(
+    "/mycart/:id",
+    isLoggedIn,
+    wrapAsync(ListingController.removeCart)
+);
+
+
+
+// NEW LISTING FORM
+router.get(
+    "/new",
+    isLoggedIn,
+    ListingController.newRoute
+);
+
+
+
+// EDIT FORM
+router.get(
+    "/:id/edit",
+    wrapAsync(ListingController.editForm)
+);
+
+
+
+// INDEX + CREATE
 router.route("/")
- .get(wrapAsync(ListingController.index)
+.get(
+    wrapAsync(ListingController.index)
 )
-.post(isLoggedIn,
+
+.post(
+    isLoggedIn,
+
     upload.single("listing[image]"),
 
     wrapAsync(ListingController.newListForm)
 );
 
-// router.route("/new")
-// .post(isLoggedIn,wrapAsync(ListingController.newListForm)
-// );
-
-router.get("/:id",(wrapAsync(ListingController.showRoute)
-));
-// .put(isLoggedIn,isOwner,
-//         upload.single("listing[image]"),
-// wrapAsync(ListingController.edit));
 
 
+// SHOW + UPDATE + DELETE
+router.route("/:id")
 
+.get(
+    wrapAsync(ListingController.showRoute)
+)
 
+.put(
+    isLoggedIn,
 
+    isOwner,
 
+    upload.single("listing[image]"),
 
-router.get("/:id/edit",wrapAsync(ListingController.editForm)
+    wrapAsync(ListingController.edit)
+)
+
+.delete(
+    isLoggedIn,
+
+    isOwner,
+
+    wrapAsync(ListingController.deleteList)
 );
-router.put("/:id",isLoggedIn,isOwner,
-        upload.single("listing[image]"),
-wrapAsync(ListingController.edit));
 
 
 
-
-router.delete("/:id/delete",isLoggedIn,isOwner, wrapAsync(ListingController.deleteList)
-);
-module.exports=router;
-
-
+module.exports = router;

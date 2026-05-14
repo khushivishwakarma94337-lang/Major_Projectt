@@ -19,17 +19,32 @@ const saveRedirectUrl=(req,res,next)=>{
    }
    next();
 }
-const isOwner=async(req,res,next)=>{
-    
-                let {id}=req.params;
-            let Listing= await Listing.findById(id);
-            if(!Listing.owner.equals(res.locals.currUser._id )){
-                req.flash("error","You don't have permission to edit");
-                return   res.redirect(`/listings/${id}`);
+const isOwner = async (req, res, next) => {
 
-            }
-next();
-}
+    let { id } = req.params;
+
+    let listing = await Listing.findById(id);
+
+    // listing not found
+    if (!listing) {
+
+        req.flash("error", "Listing not found");
+
+        return res.redirect("/listings");
+
+    }
+
+    // owner check
+    if (!listing.owner.equals(res.locals.currUser._id)) {
+
+        req.flash("error", "You don't have permission");
+
+        return res.redirect(`/listings/${id}`);
+
+    }
+
+    next();
+};
 
 const isreviewAuthor=async(req,res,next)=>{
                 let {id,reviewId}=req.params;

@@ -22,6 +22,7 @@ const dbUrl=process.env.ATLAS;
 const ListingRouter=require("./routes/listing.js");
 const ReviewRouter=require("./routes/review.js");
 const userRouter=require("./routes/User.js");
+const paymentRoutes=require("./routes/payment.js");
 const ExpressError=require("./utils/ExpressError.js");
 
 const session=require("express-session")
@@ -30,6 +31,7 @@ const flash=require("connect-flash");
 const passport=require("passport");
 const LocalStrategy=require("passport-local");
 const User=require("./models/user.js");
+const cors=require("cors");
 
 const store= new MongoStore({
   mongoUrl:dbUrl,
@@ -62,7 +64,8 @@ app.set("trust proxy",1);
 app.use(session(sessionOption));   // 1️⃣ FIRST
 app.use(passport.initialize());    // 2️⃣
 app.use(passport.session());       // 3️⃣
-app.use(flash());                  // 4️⃣
+app.use(flash()); 
+app.use(cors());                 // 4️⃣
 
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
@@ -88,6 +91,7 @@ app.use((req, res, next) => {
 app.use("/listings",ListingRouter);
 app.use("/listings/:id/reviews",ReviewRouter);
 app.use("/", userRouter);
+app.use("/",paymentRoutes);
 
 
 

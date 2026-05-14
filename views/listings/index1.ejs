@@ -44,14 +44,25 @@
           <p class="card-text">
             Country : <%= inddata.country %>
           </p>
-
+        <div class="row g-2 mt-3">
+          <div class="col-6 ">
           <form action="/listings/<%= inddata._id %>/cart" method="POST">
 
-            <button class="btn btn-danger rounded-pill w-100">
+            <button class="btn btn-danger rounded-pill btn-sm w-100 h-150">
               Add to Cart
             </button>
+          </div>
 
           </form>
+             <div class="col-6">
+            <button  onClick="payNow('<%= inddata.price %>')"type="button"class="btn btn-danger rounded-pill  btn-sm w-100 h-150">
+              Book Now!
+            </button>
+            </div>
+          </div>  
+
+
+
 
         </div>
 
@@ -72,7 +83,7 @@
 
         <form 
           method="POST"
-          action="/listings/<%= inddata._id %>/delete?_method=DELETE"
+          action="/listings/<%= inddata._id %>?_method=DELETE"
         >
 
           <button class="btn btn-danger rounded-pill">
@@ -257,3 +268,8 @@
 </div>
 
 <script src="/js/map.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="/js/payment.js"></script>
+
+
+
