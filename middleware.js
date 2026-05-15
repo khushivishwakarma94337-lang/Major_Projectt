@@ -3,6 +3,14 @@ const Listing=require("./models/listing");
 const Review= require("./models/review.js");
 
 
+ const isLoggedInCart = (req, res, next) => {
+    if (!req.isAuthenticated()) {
+        req.flash("error", "Please login first to add items to cart");
+        return res.redirect("back"); // 👈 stays on same page
+    }
+    next();
+};
+
 
  const isLoggedIn=(req,res,next)=>{
     console.log(req.user);
@@ -58,4 +66,4 @@ const isreviewAuthor=async(req,res,next)=>{
               
 
 }
-module.exports={isLoggedIn,saveRedirectUrl,isOwner,isreviewAuthor};
+module.exports={isLoggedIn,saveRedirectUrl,isOwner,isreviewAuthor,isLoggedInCart};

@@ -8,7 +8,7 @@ const { ListingSchema } = require("../schema.js");
 
 const ExpressError = require("../utils/ExpressError.js");
 
-const { isLoggedIn, isOwner } = require("../middleware.js");
+const { isLoggedIn, isOwner,isLoggedInCart } = require("../middleware.js");
 
 const ListingController = require("../controllers/listing.js");
 
@@ -49,18 +49,16 @@ router.get(
 );
 
 
-
 // CART
 router.get(
     "/mycart",
-    isLoggedIn,
     ListingController.cart
 );
 
 router.post(
     "/:id/cart",
-    isLoggedIn,
-    ListingController.cartPost
+    isLoggedInCart,
+    wrapAsync(ListingController.cartPost)
 );
 
 router.delete(
